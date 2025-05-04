@@ -1,0 +1,48 @@
+{% extends 'gestion/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'gestion/reportes.css' %}">
+<h2>Reportes del Sistema IFN</h2>
+
+<h3>Coordenadas Registradas</h3>
+<table border="1">
+  <tr>
+    <th>Latitud</th>
+    <th>Longitud</th>
+    <th>Departamento</th>
+    <th>Municipio</th>
+  </tr>
+  {% for c in coordenadas %}
+    <tr>
+      <td>{{ c.latitud }}</td>
+      <td>{{ c.longitud }}</td>
+      <td>{{ c.departamento.nombre }}</td>
+      <td>{{ c.municipio.nombre }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+<h3>Brigadas</h3>
+<table border="1">
+  <tr>
+    <th>Nombre</th>
+    <th>Miembros</th>
+  </tr>
+  {% for b in brigadas %}
+    <tr>
+      <td>{{ b.nombre }}</td>
+      <td>
+        <ul>
+          {% for m in b.miembros.all %}
+            <li>{{ m.username }} ({{ m.first_name }})</li>
+          {% empty %}
+            <li>Sin miembros</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}
+

@@ -1,0 +1,53 @@
+{% extends 'gestion/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'gestion/crear_brigada.css' %}">
+<h2>Crear Brigada</h2>
+<form method="post">
+  {% csrf_token %}
+  <label for="nombre">Nombre:</label><br>
+  <input type="text" name="nombre" required><br><br>
+
+  <label for="descripcion">Descripción:</label><br>
+  <textarea name="descripcion"></textarea><br><br>
+
+  <label for="estado">Estado:</label><br>
+  <select name="estado">
+    <option value="activa">Activa</option>
+    <option value="inactiva">Inactiva</option>
+    <option value="en_misión">En misión</option>
+  </select><br><br>
+
+  <button type="submit">Crear</button>
+</form>
+
+{% if brigada %}
+  <hr>
+  <h3>✅ Brigada Creada:</h3>
+  <ul>
+    <li><strong>Nombre:</strong> {{ brigada.nombre }}</li>
+    <li><strong>Descripción:</strong> {{ brigada.descripcion }}</li>
+    <li><strong>Estado:</strong> {{ brigada.estado }}</li>
+    <li><strong>Fecha de Creación:</strong> {{ brigada.fecha_creacion }}</li>
+  </ul>
+{% endif %}
+
+<hr>
+<h3>📋 Todas las Brigadas Registradas</h3>
+<table border="1" cellpadding="5">
+  <tr>
+    <th>Nombre</th>
+    <th>Descripción</th>
+    <th>Estado</th>
+    <th>Creación</th>
+  </tr>
+  {% for b in brigadas %}
+    <tr>
+      <td>{{ b.nombre }}</td>
+      <td>{{ b.descripcion }}</td>
+      <td>{{ b.estado }}</td>
+      <td>{{ b.fecha_creacion }}</td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

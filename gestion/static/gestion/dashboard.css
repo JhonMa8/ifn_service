@@ -1,0 +1,136 @@
+/* dashboard.css - Styles for IFN System Dashboard */
+/* ============================================ */
+
+/* Base Styles */
+:root {
+  --verde-oscuro: #2E7D32;   /* Dark green */
+  --verde-medio: #4CAF50;    /* Medium green */
+  --verde-claro: #C8E6C9;    /* Light green */
+  --cafe-oscuro: #5D4037;    /* Dark brown */
+  --cafe-claro: #D7CCC8;     /* Light brown */
+  --blanco: #FFFFFF;
+  --texto: #212121;
+}
+
+/* Content Styling */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+h2 {
+  color: var(--cafe-oscuro);
+  border-bottom: 2px solid var(--verde-oscuro);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#userRole {
+  color: var(--verde-oscuro);
+  font-style: italic;
+}
+
+/* Menu Styling */
+.menu {
+  background-color: var(--verde-claro);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu h3 {
+  color: var(--cafe-oscuro);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+/* Button Styling */
+.btn {
+  display: block;
+  padding: 0.8rem 1.2rem;
+  background-color: var(--verde-oscuro);
+  color: var(--blanco);
+  text-decoration: none;
+  border-radius: 6px;
+  text-align: center;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn:hover {
+  background-color: var(--verde-medio);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem;
+  }
+  
+  .menu ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* gestion/static/gestion/dashboard.css */
+
+/* Estilos específicos para los botones de navegación */
+nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+/* Botón Inicio */
+nav a[href*="dashboard"] {
+  background-color: #2E7D32; /* Verde oscuro */
+  color: white;
+  border: 1px solid #2E7D32;
+}
+
+nav a[href*="dashboard"]:hover {
+  background-color: #388E3C; /* Verde un poco más claro */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Botón Cerrar sesión */
+nav a[href*="logout"] {
+  background-color: transparent;
+  color: #5D4037; /* Café oscuro */
+  border: 1px solid #5D4037;
+}
+
+nav a[href*="logout"]:hover {
+  background-color: #5D4037; /* Café oscuro */
+  color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Eliminar el separador | que viene por defecto */
+nav a:not(:last-child)::after {
+  content: none;
+}

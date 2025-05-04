@@ -1,0 +1,62 @@
+{% extends 'gestion/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'gestion/crear_coordenadas.css' %}">
+  <h2>Seleccionar Coordenadas</h2>
+
+  <div id="map" style="height: 400px;"></div>
+
+  <form method="post">
+    {% csrf_token %}
+    <label for="latitud">Latitud:</label>
+    <input type="text" id="latitud" name="latitud" readonly><br>
+
+    <label for="longitud">Longitud:</label>
+    <input type="text" id="longitud" name="longitud" readonly><br>
+
+    <label for="departamento">Departamento:</label>
+    <input type="text" id="departamento" name="departamento" readonly><br>
+
+    <label for="municipio">Municipio:</label>
+    <input type="text" id="municipio" name="municipio" readonly><br>
+
+    <button type="submit">Guardar Coordenadas</button>
+  </form>
+
+  <script>
+    var map = L.map('map').setView([4.5709, -74.2973], 5); // Colombia centrado
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18
+    }).addTo(map);
+
+    var marker;
+
+    map.on('click', function (e) {
+      var lat = e.latlng.lat.toFixed(6);
+      var lng = e.latlng.lng.toFixed(6);
+
+      document.getElementById("latitud").value = lat;
+      document.getElementById("longitud").value = lng;
+
+      if (marker) {
+        marker.setLatLng(e.latlng);
+      } else {
+        marker = L.marker(e.latlng).addTo(map);
+      }
+
+      // Llamada a API de geocodificación inversa
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+        .then(response => response.json())
+        .then(data => {
+          const address = data.address;
+          document.getElementById("departamento").value = address.state || "No encontrado";
+          document.getElementById("municipio").value = address.city || address.town || address.village || "No encontrado";
+        })
+        .catch(err => {
+          alert("No se pudo obtener la ubicación.");
+          console.error(err);
+        });
+    });
+  </script>
+{% endblock %}

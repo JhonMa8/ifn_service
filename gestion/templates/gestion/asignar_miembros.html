@@ -1,0 +1,28 @@
+{% extends "gestion/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'gestion/asignar_miembros.css' %}">
+  <h2>Asignar Miembros a una Brigada</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    
+    <label for="brigada">Selecciona una brigada:</label>
+    <select name="brigada_id" id="brigada">
+      {% for brigada in brigadas %}
+        <option value="{{ brigada.id }}">{{ brigada.nombre }}</option>
+      {% endfor %}
+    </select>
+
+    <h3>Selecciona los empleados:</h3>
+    {% for usuario in usuarios %}
+      <div>
+        <input type="checkbox" name="miembros" value="{{ usuario.id }}" id="u{{ usuario.id }}">
+        <label for="u{{ usuario.id }}">{{ usuario.username }} ({{ usuario.first_name }})</label>
+      </div>
+    {% endfor %}
+
+    <button type="submit">Asignar</button>
+  </form>
+{% endblock %}
+

@@ -1,0 +1,18 @@
+{% extends "gestion/base.html" %}
+{% block content %}
+  <h2>Bienvenido al sistema IFN</h2>
+  <p>Tu rol es: <strong id="userRole">Cargando…</strong></p>
+
+  <div id="menuAdmin" class="menu" style="display:none">
+    <h3>Menú Administrador</h3>
+    <ul>
+      <li><a class="btn" href="{% url 'crear_brigada' %}">Crear Brigada</a></li>
+      <li><a class="btn" href="{% url 'asignar_miembros' %}">Asignar Miembros</a></li>
+      <li><a class="btn" href="{% url 'crear_coordenadas' %}">Crear Coordenadas</a></li>
+      <li><a class="btn" href="{% url 'reportes' %}">Ver Reportes</a></li>
+
+    </ul>
+  </div>
+
+  <!-- aquí tus divs de menuJefe, menuTecnico, menuBotanico -->
+{% endblock %}
