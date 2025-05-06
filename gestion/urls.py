@@ -21,5 +21,7 @@ urlpatterns = [
     path('asignar-miembros/', views.asignar_miembros, name='asignar_miembros'),
     path('crear-coordenadas/', views.crear_coordenadas, name='crear_coordenadas'),
     path('reportes/', views.reportes, name='reportes'),
-
+    path('ver-notificaciones/', views.ver_notificaciones, name='ver_notificaciones'),
+    path('registro-campo/', views.registro_campo, name='registro_campo'),
+    path('reporte-brigada/', views.reporte_brigada, name='reporte_brigada'),
 ]

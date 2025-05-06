@@ -118,7 +118,16 @@ def reportes(request):
         'brigadas': brigadas,
     })
 
+from django.shortcuts import render
 
+def ver_notificaciones(request):
+    return render(request, 'gestion/ver_notificaciones.html')  # crea esta plantilla también
+
+def registro_campo(request):
+    return render(request, 'gestion/registro_campo.html')  # crea esta plantilla también
+
+def reporte_brigada(request):
+    return render(request, 'gestion/reporte_brigada.html')  # crea esta plantilla también
 
 
 class DepartamentoViewSet(viewsets.ModelViewSet):
