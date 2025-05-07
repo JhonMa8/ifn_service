@@ -6,23 +6,20 @@
 
   <form method="post">
     {% csrf_token %}
-    
-    <label for="brigada">Selecciona una brigada:</label>
-    <select name="brigada_id" id="brigada">
-      {% for brigada in brigadas %}
-        <option value="{{ brigada.id }}">{{ brigada.nombre }}</option>
+    <label for="brigada">Seleccione una brigada:</label>
+    <select name="brigada_id">
+      {% for b in brigadas %}
+        <option value="{{ b.id }}">{{ b.nombre }}</option>
       {% endfor %}
-    </select>
-
-    <h3>Selecciona los empleados:</h3>
-    {% for usuario in usuarios %}
-      <div>
-        <input type="checkbox" name="miembros" value="{{ usuario.id }}" id="u{{ usuario.id }}">
-        <label for="u{{ usuario.id }}">{{ usuario.username }} ({{ usuario.first_name }})</label>
-      </div>
+    </select><br><br>
+  
+    <label>Empleados disponibles:</label><br>
+    {% for e in empleados %}
+      <input type="checkbox" name="miembros" value="{{ e.id }}">
+      {{ e.username }} ({{ e.role }})<br>
     {% endfor %}
-
-    <button type="submit">Asignar</button>
-  </form>
+  
+    <button type="submit">Asignar Miembros</button>
+  </form> 
 {% endblock %}
 

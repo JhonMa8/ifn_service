@@ -18,6 +18,14 @@
     <option value="en_misión">En misión</option>
   </select><br><br>
 
+  <label for="coordenada">Asignar Coordenada:</label><br>
+  <select name="coordenada">
+  <option value="">-- Selecciona una --</option>
+  {% for coord in coordenadas %}
+    <option value="{{ coord.id }}">{{ coord.latitud }}, {{ coord.longitud }}</option>
+  {% endfor %}
+  </select><br><br>
+
   <button type="submit">Crear</button>
 </form>
 
@@ -29,6 +37,13 @@
     <li><strong>Descripción:</strong> {{ brigada.descripcion }}</li>
     <li><strong>Estado:</strong> {{ brigada.estado }}</li>
     <li><strong>Fecha de Creación:</strong> {{ brigada.fecha_creacion }}</li>
+    <li><strong>Coordenadas:</strong> 
+      {% if brigada.coordenadas %}
+        {{ brigada.coordenadas.latitud }}, {{ brigada.coordenadas.longitud }}
+      {% else %}
+        No asignada
+      {% endif %}
+    </li>    
   </ul>
 {% endif %}
 
@@ -40,6 +55,7 @@
     <th>Descripción</th>
     <th>Estado</th>
     <th>Creación</th>
+    <th>Coordenadas</th>
   </tr>
   {% for b in brigadas %}
     <tr>
@@ -47,6 +63,13 @@
       <td>{{ b.descripcion }}</td>
       <td>{{ b.estado }}</td>
       <td>{{ b.fecha_creacion }}</td>
+      <td>
+        {% if b.coordenadas %}
+          {{ b.coordenadas.latitud }}, {{ b.coordenadas.longitud }}
+        {% else %}
+          Sin asignar
+        {% endif %}
+      </td>
     </tr>
   {% endfor %}
 </table>

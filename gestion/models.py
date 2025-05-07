@@ -24,6 +24,8 @@ class Coordenada(models.Model):
     def __str__(self):
         return f"{self.latitud}, {self.longitud}"
 
+from gestion.models import Coordenada  # Asegúrate de importar el modelo
+
 class Brigada(models.Model):
     nombre = models.CharField(max_length=100)
     fecha_creacion = models.DateField(auto_now_add=True)
@@ -35,8 +37,11 @@ class Brigada(models.Model):
         ('en_misión', 'En misión')
     ], default='activa')
 
+    coordenadas = models.ForeignKey(Coordenada, on_delete=models.SET_NULL, null=True, blank=True)
+
     def __str__(self):
         return self.nombre
+
 
 class Parcela(models.Model):
     coordenada = models.ForeignKey(Coordenada, on_delete=models.CASCADE)

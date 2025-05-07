@@ -25,26 +25,36 @@ from .models import Brigada
 from django.contrib.auth.decorators import login_required
 
 
+from django.shortcuts import render
+from .models import Brigada, Coordenada
+
 def crear_brigada(request):
     brigada_creada = None
+    coordenadas_disponibles = Coordenada.objects.all()
 
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         descripcion = request.POST.get('descripcion')
         estado = request.POST.get('estado')
+        coord_id = request.POST.get('coordenada')
+
+        coordenada = Coordenada.objects.get(id=coord_id) if coord_id else None
 
         brigada_creada = Brigada.objects.create(
             nombre=nombre,
             descripcion=descripcion,
-            estado=estado
+            estado=estado,
+            coordenadas=coordenada
         )
 
-    brigadas = Brigada.objects.all().order_by('-fecha_creacion')  # más recientes primero
+    brigadas = Brigada.objects.all().order_by('-fecha_creacion')
 
     return render(request, 'gestion/crear_brigada.html', {
         'brigada': brigada_creada,
-        'brigadas': brigadas
+        'brigadas': brigadas,
+        'coordenadas': coordenadas_disponibles
     })
+
 
 
 
@@ -53,25 +63,22 @@ from django.contrib.auth.models import User
 from .models import Brigada
 
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+from django.shortcuts import render
+from .models import Brigada
+from .services import obtener_usuarios_no_admin
+
 def asignar_miembros(request):
-    if request.method == 'POST':
-        brigada_id = request.POST.get('brigada_id')
-        miembros_ids = request.POST.getlist('miembros')
-
-        brigada = Brigada.objects.get(id=brigada_id)
-        miembros = User.objects.filter(id__in=miembros_ids)
-        brigada.miembros.set(miembros)  # relación M2M
-        brigada.save()
-
-        return redirect('dashboard')
-
     brigadas = Brigada.objects.all()
-    usuarios = User.objects.exclude(first_name='admin')  # evita asignar al admin
+    empleados = obtener_usuarios_no_admin()
 
-    return render(request, 'gestion/asignar_miembros.html', {
-        'brigadas': brigadas,
-        'usuarios': usuarios
+    return render(request, "gestion/asignar_miembros.html", {
+        "brigadas": brigadas,
+        "empleados": empleados
     })
+
 
 
 
