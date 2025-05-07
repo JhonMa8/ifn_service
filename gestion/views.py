@@ -70,15 +70,39 @@ from django.shortcuts import render
 from .models import Brigada
 from .services import obtener_usuarios_no_admin
 
+from django.shortcuts import get_object_or_404, redirect
+
+from .models import MiembroBrigada
+
 def asignar_miembros(request):
     brigadas = Brigada.objects.all()
     empleados = obtener_usuarios_no_admin()
+
+    if request.method == "POST":
+        brigada_id = request.POST.get("brigada_id")
+        miembros_ids = request.POST.getlist("miembros")
+        brigada = get_object_or_404(Brigada, id=brigada_id)
+
+        # Eliminar miembros anteriores
+        MiembroBrigada.objects.filter(brigada=brigada).delete()
+
+        # Buscar datos completos del usuario en la lista original
+        for empleado in empleados:
+            if str(empleado["id"]) in miembros_ids:
+                MiembroBrigada.objects.create(
+                    id_externo=empleado["id"],  # ✅ Esto es lo correcto
+                    username=empleado["username"],
+                    role=empleado["role"],
+                    brigada=brigada
+                )
+
+
+        return redirect("asignar_miembros")
 
     return render(request, "gestion/asignar_miembros.html", {
         "brigadas": brigadas,
         "empleados": empleados
     })
-
 
 
 
@@ -116,14 +140,28 @@ from django.db.models import Prefetch
 from django.contrib.auth.models import User
 
 
+from .models import Brigada, MiembroBrigada
+
+from django.shortcuts import render
+from .models import Brigada, MiembroBrigada
+
 def reportes(request):
-    coordenadas = Coordenada.objects.select_related('departamento', 'municipio')
-    brigadas = Brigada.objects.prefetch_related('miembros')
-    
-    return render(request, 'gestion/reportes.html', {
-        'coordenadas': coordenadas,
-        'brigadas': brigadas,
+    brigadas = Brigada.objects.all()
+    datos_reporte = []
+
+    for brigada in brigadas:
+        miembros = MiembroBrigada.objects.filter(brigada=brigada)
+        datos_reporte.append({
+            "brigada": brigada,
+            "miembros": miembros
+        })
+
+    return render(request, "gestion/reportes.html", {
+        "datos_reporte": datos_reporte
     })
+
+
+
 
 from django.shortcuts import render
 

@@ -42,6 +42,15 @@ class Brigada(models.Model):
     def __str__(self):
         return self.nombre
 
+from django.db import models
+
+class MiembroBrigada(models.Model):
+    id_externo = models.IntegerField()
+    username = models.CharField(max_length=150)
+    role = models.CharField(max_length=50)
+    brigada = models.ForeignKey(Brigada, on_delete=models.CASCADE, related_name="miembros_asignados")
+
+
 
 class Parcela(models.Model):
     coordenada = models.ForeignKey(Coordenada, on_delete=models.CASCADE)

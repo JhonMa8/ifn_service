@@ -1,48 +1,30 @@
-{% extends 'gestion/base.html' %}
+{% extends "gestion/base.html" %}
 {% load static %}
+
 {% block content %}
-<link rel="stylesheet" href="{% static 'gestion/reportes.css' %}">
-<h2>Reportes del Sistema IFN</h2>
+<h1>Reporte de Brigadas y Miembros</h1>
 
-<h3>Coordenadas Registradas</h3>
-<table border="1">
-  <tr>
-    <th>Latitud</th>
-    <th>Longitud</th>
-    <th>Departamento</th>
-    <th>Municipio</th>
-  </tr>
-  {% for c in coordenadas %}
-    <tr>
-      <td>{{ c.latitud }}</td>
-      <td>{{ c.longitud }}</td>
-      <td>{{ c.departamento.nombre }}</td>
-      <td>{{ c.municipio.nombre }}</td>
-    </tr>
-  {% endfor %}
-</table>
+{% for entrada in datos_reporte %}
+  <div style="margin-bottom: 30px; border: 1px solid #ccc; padding: 20px;">
+    <h2>Brigada: {{ entrada.brigada.nombre }}</h2>
+    <p><strong>Descripción:</strong> {{ entrada.brigada.descripcion|default:"Sin descripción" }}</p>
+    <p><strong>Estado:</strong> {{ entrada.brigada.get_estado_display }}</p>
+    <p><strong>Coordenadas:</strong>
+      {% if entrada.brigada.coordenadas %}
+        {{ entrada.brigada.coordenadas.latitud }}, {{ entrada.brigada.coordenadas.longitud }}
+      {% else %}
+        No asignadas
+      {% endif %}
+    </p>
 
-<h3>Brigadas</h3>
-<table border="1">
-  <tr>
-    <th>Nombre</th>
-    <th>Miembros</th>
-  </tr>
-  {% for b in brigadas %}
-    <tr>
-      <td>{{ b.nombre }}</td>
-      <td>
-        <ul>
-          {% for m in b.miembros.all %}
-            <li>{{ m.username }} ({{ m.first_name }})</li>
-          {% empty %}
-            <li>Sin miembros</li>
-          {% endfor %}
-        </ul>
-      </td>
-    </tr>
-  {% endfor %}
-</table>
-
+    <h4>Miembros Asignados:</h4>
+    <ul>
+      {% for miembro in entrada.miembros %}
+        <li>{{ miembro.username }} ({{ miembro.role }})</li>
+      {% empty %}
+        <li>No hay miembros asignados</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endfor %}
 {% endblock %}
-
