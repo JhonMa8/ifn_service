@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'ifn_core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ifn_gestion',
+        'NAME': 'ifn_service',
         'USER': 'postgres',
         'PASSWORD': '123456789',
         'HOST': 'localhost',
