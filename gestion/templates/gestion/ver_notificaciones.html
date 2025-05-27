@@ -1,5 +1,35 @@
 {% extends "gestion/base.html" %}
+{% load static %}
+
 {% block content %}
-  <h2>Notificaciones</h2>
-  <p>Aquí aparecerán tus notificaciones como jefe de brigada.</p>
+<h1>Notificaciones: Reportes Asignados a Ti</h1>
+
+{% for entrada in datos_reporte %}
+  <div style="margin-bottom: 30px; border: 1px solid #ccc; padding: 20px;">
+    <h2>Brigada: {{ entrada.brigada.nombre }}</h2>
+    <p><strong>Descripción:</strong> {{ entrada.brigada.descripcion|default:"Sin descripción" }}</p>
+    <p><strong>Estado:</strong> {{ entrada.brigada.get_estado_display }}</p>
+    <p><strong>Coordenadas:</strong>
+      {% if entrada.brigada.coordenadas %}
+        {{ entrada.brigada.coordenadas.latitud }}, {{ entrada.brigada.coordenadas.longitud }}
+      {% else %}
+        No asignadas
+      {% endif %}
+    </p>
+
+    <h4>Miembros Asignados:</h4>
+    <ul>
+      {% for miembro in entrada.miembros %}
+        <li>{{ miembro.username }} ({{ miembro.role }})</li>
+      {% empty %}
+        <li>No hay miembros asignados</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% empty %}
+  <p>No tienes brigadas asignadas como jefe.</p>
+{% endfor %}
 {% endblock %}
+
+
+

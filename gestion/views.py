@@ -165,8 +165,30 @@ def reportes(request):
 
 from django.shortcuts import render
 
+from django.shortcuts import render
+from .models import Brigada, MiembroBrigada
+from django.db.models import Q
+
 def ver_notificaciones(request):
-    return render(request, 'gestion/ver_notificaciones.html')  # crea esta plantilla también
+    brigadas = Brigada.objects.all()
+    datos_reporte = []
+
+    for brigada in brigadas:
+        miembros = MiembroBrigada.objects.filter(brigada=brigada)
+        datos_reporte.append({
+            "brigada": brigada,
+            "miembros": miembros
+        })
+
+    return render(request, "gestion/ver_notificaciones.html", {
+        "datos_reporte": datos_reporte
+    })
+
+
+
+
+
+
 
 def registro_campo(request):
     return render(request, 'gestion/registro_campo.html')  # crea esta plantilla también
