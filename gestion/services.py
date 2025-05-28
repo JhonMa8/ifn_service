@@ -16,3 +16,22 @@ def obtener_usuarios_no_admin():
     except Exception as e:
         print("Error consultando login-service:", e)
         return []
+
+import requests
+from django.contrib.auth.models import User
+
+def obtener_usuario_por_token(token):
+    try:
+        response = requests.get(
+            'http://localhost:8000/api/auth/users/',  # ajusta si usas otro endpoint
+            headers={'Authorization': f'Token {token}'}
+        )
+        if response.status_code == 200:
+            data = response.json()
+            username = data.get('username')
+
+            # Buscar usuario localmente por username
+            return User.objects.filter(username=username).first()
+    except Exception as e:
+        print("Error obteniendo usuario:", e)
+    return None

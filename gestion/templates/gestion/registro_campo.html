@@ -1,5 +1,71 @@
-{% extends "gestion/base.html" %}
+{% extends 'gestion/base.html' %}
+{% load static %}
 {% block content %}
-  <h2>Notificaciones</h2>
-  <p>Aquí aparecerán tus notificaciones como jefe de brigada.</p>
+<link rel="stylesheet" href="{% static 'gestion/registro_campo.css' %}">
+
+<h2>Registro de Trabajo de Campo</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <label>Brigada:</label><br>
+  <select name="brigada" required>
+    <option value="">-- Selecciona --</option>
+    {% for b in brigadas %}
+      <option value="{{ b.id }}">{{ b.nombre }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <label>Coordenada:</label><br>
+  <select name="coordenada" required>
+    <option value="">-- Selecciona --</option>
+    {% for c in coordenadas %}
+      <option value="{{ c.id }}">{{ c.latitud }}, {{ c.longitud }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <label>Condiciones Climáticas:</label><br>
+  <input type="text" name="condiciones_climaticas" required><br><br>
+
+  <label>Equipo Utilizado:</label><br>
+  <textarea name="equipo_utilizado" required></textarea><br><br>
+
+  <label>Observaciones:</label><br>
+  <textarea name="observaciones"></textarea><br><br>
+
+  <button type="submit">Guardar</button>
+</form>
+
+{% if registro_guardado %}
+  <hr>
+  <h3>✅ Registro Guardado:</h3>
+  <ul>
+    <li><strong>Brigada:</strong> {{ registro_guardado.brigada.nombre }}</li>
+    <li><strong>Coordenada:</strong> {{ registro_guardado.coordenada }}</li>
+    <li><strong>Condiciones:</strong> {{ registro_guardado.condiciones_climaticas }}</li>
+    <li><strong>Fecha:</strong> {{ registro_guardado.fecha }}</li>
+  </ul>
+{% endif %}
+
+<hr>
+<h3>📋 Registros Existentes</h3>
+<table border="1" cellpadding="5">
+  <tr>
+    <th>Brigada</th>
+    <th>Coordenada</th>
+    <th>Condiciones</th>
+    <th>Equipo Utilizado</th>
+    <th>Observaciones</th>
+    <th>Fecha</th>
+  </tr>
+  {% for r in registros %}
+    <tr>
+      <td>{{ r.brigada.nombre }}</td>
+      <td>{{ r.coordenada.latitud }}, {{ r.coordenada.longitud }}</td>
+      <td>{{ r.condiciones_climaticas }}</td>
+      <td>{{ r.equipo_utilizado }}</td>
+      <td>{{ r.observaciones }}</td>
+      <td>{{ r.fecha|date:"d/m/Y" }}</td>
+    </tr>
+  {% endfor %}
+</table>
 {% endblock %}

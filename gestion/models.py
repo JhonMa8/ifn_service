@@ -50,7 +50,24 @@ class MiembroBrigada(models.Model):
     role = models.CharField(max_length=50)
     brigada = models.ForeignKey(Brigada, on_delete=models.CASCADE, related_name="miembros_asignados")
 
+class RegistroCampo(models.Model):
+    ESTADO_CHOICES = [
+        ('B', 'Borrador'),
+        ('C', 'Completado'),
+        ('V', 'Verificado'),
+    ]
+    
+    brigada = models.ForeignKey(Brigada, on_delete=models.PROTECT)
+    fecha = models.DateField(auto_now_add=True)
+    coordenada = models.ForeignKey(Coordenada, on_delete=models.PROTECT)
+    condiciones_climaticas = models.CharField(max_length=255)
+    equipo_utilizado = models.TextField()
+    observaciones = models.TextField(blank=True)
+    estado = models.CharField(max_length=1, choices=ESTADO_CHOICES, default='B')
+    
 
+    def __str__(self):
+        return f"Registro {self.id} - {self.brigada.nombre}"
 
 class Parcela(models.Model):
     coordenada = models.ForeignKey(Coordenada, on_delete=models.CASCADE)

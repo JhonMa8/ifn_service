@@ -184,17 +184,44 @@ def ver_notificaciones(request):
         "datos_reporte": datos_reporte
     })
 
-
-
-
-
-
+from django.shortcuts import render, redirect
+from .models import RegistroCampo, Brigada, Coordenada
+from django.contrib import messages
 
 def registro_campo(request):
-    return render(request, 'gestion/registro_campo.html')  # crea esta plantilla también
+    brigadas = Brigada.objects.all()
+    coordenadas = Coordenada.objects.all()
+    nuevo_registro = None
 
-def reporte_brigada(request):
-    return render(request, 'gestion/reporte_brigada.html')  # crea esta plantilla también
+    if request.method == 'POST':
+        brigada_id = request.POST.get('brigada')
+        coordenada_id = request.POST.get('coordenada')
+        condiciones = request.POST.get('condiciones_climaticas')
+        equipo = request.POST.get('equipo_utilizado')
+        observaciones = request.POST.get('observaciones')
+
+        try:
+            nuevo_registro = RegistroCampo.objects.create(
+                brigada_id=brigada_id,
+                coordenada_id=coordenada_id,
+                condiciones_climaticas=condiciones,
+                equipo_utilizado=equipo,
+                observaciones=observaciones or '',
+            )
+            messages.success(request, "Registro guardado con éxito.")
+            return redirect('registro_campo')
+        except Exception as e:
+            print("Error:", e)
+            messages.error(request, f"No se pudo guardar: {str(e)}")
+
+    registros = RegistroCampo.objects.all().order_by('-fecha')
+
+    return render(request, 'gestion/registro_campo.html', {
+        'brigadas': brigadas,
+        'coordenadas': coordenadas,
+        'registros': registros,
+        'registro_guardado': nuevo_registro
+    })
 
 
 class DepartamentoViewSet(viewsets.ModelViewSet):
