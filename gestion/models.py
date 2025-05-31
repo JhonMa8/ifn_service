@@ -69,6 +69,31 @@ class RegistroCampo(models.Model):
     def __str__(self):
         return f"Registro {self.id} - {self.brigada.nombre}"
 
+class RegistroTecnico(models.Model):
+    brigada = models.ForeignKey(Brigada, on_delete=models.PROTECT)
+    coordenada = models.ForeignKey(Coordenada, on_delete=models.PROTECT)
+    tipo_terreno = models.CharField(max_length=100)
+    inclinacion = models.CharField(max_length=50)
+    presencia_agua = models.BooleanField()
+    estado_suelo = models.TextField()
+    fecha = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Técnico - {self.brigada.nombre} ({self.fecha})"
+
+class RegistroBotanico(models.Model):
+    brigada = models.ForeignKey(Brigada, on_delete=models.PROTECT)
+    coordenada = models.ForeignKey(Coordenada, on_delete=models.PROTECT)
+    especie_identificada = models.CharField(max_length=100)
+    familia_botanica = models.CharField(max_length=100)
+    estado_fenologico = models.CharField(max_length=100)
+    observaciones = models.TextField(blank=True)
+    fecha = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Botánico - {self.brigada.nombre} ({self.especie_identificada})"
+
+
 class Parcela(models.Model):
     coordenada = models.ForeignKey(Coordenada, on_delete=models.CASCADE)
     codigo = models.CharField(max_length=20)

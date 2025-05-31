@@ -1,0 +1,74 @@
+{% extends 'gestion/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'gestion/registro_botanico.css' %}">
+
+<h2>Registro de Datos Botánicos</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <label>Brigada:</label><br>
+  <select name="brigada" required>
+    <option value="">-- Selecciona --</option>
+    {% for b in brigadas %}
+      <option value="{{ b.id }}">{{ b.nombre }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <label>Coordenada:</label><br>
+  <select name="coordenada" required>
+    <option value="">-- Selecciona --</option>
+    {% for c in coordenadas %}
+      <option value="{{ c.id }}">{{ c.latitud }}, {{ c.longitud }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <label>Especie Identificada:</label><br>
+  <input type="text" name="especie_identificada" required><br><br>
+
+  <label>Familia Botánica:</label><br>
+  <input type="text" name="familia_botanica" required><br><br>
+
+  <label>Estado Fenológico:</label><br>
+  <input type="text" name="estado_fenologico" required><br><br>
+
+  <label>Observaciones:</label><br>
+  <textarea name="observaciones"></textarea><br><br>
+
+  <button type="submit">Guardar</button>
+</form>
+
+{% if registro_guardado %}
+  <hr>
+  <h3>✅ Registro Guardado:</h3>
+  <ul>
+    <li><strong>Especie:</strong> {{ registro_guardado.especie_identificada }}</li>
+    <li><strong>Familia:</strong> {{ registro_guardado.familia_botanica }}</li>
+  </ul>
+{% endif %}
+
+<hr>
+<h3>📋 Registros Botánicos</h3>
+<table border="1" cellpadding="5">
+  <tr>
+    <th>Brigada</th>
+    <th>Coordenada</th>
+    <th>Especie</th>
+    <th>Familia</th>
+    <th>Fenología</th>
+    <th>Observaciones</th>
+    <th>Fecha</th>
+  </tr>
+  {% for r in registros %}
+    <tr>
+      <td>{{ r.brigada.nombre }}</td>
+      <td>{{ r.coordenada.latitud }}, {{ r.coordenada.longitud }}</td>
+      <td>{{ r.especie_identificada }}</td>
+      <td>{{ r.familia_botanica }}</td>
+      <td>{{ r.estado_fenologico }}</td>
+      <td>{{ r.observaciones }}</td>
+      <td>{{ r.fecha|date:"d/m/Y" }}</td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

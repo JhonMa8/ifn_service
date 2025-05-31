@@ -10,7 +10,8 @@ from django.shortcuts import redirect
 
 def logout_view(request):
     logout(request)
-    return redirect('dashboard')
+    return redirect("http://localhost:8000/")  # ← dirección de tu login-service
+
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -223,6 +224,55 @@ def registro_campo(request):
         'registro_guardado': nuevo_registro
     })
 
+from .models import RegistroTecnico, RegistroBotanico
+
+def registro_tecnico(request):
+    brigadas = Brigada.objects.all()
+    coordenadas = Coordenada.objects.all()
+    nuevo = None
+
+    if request.method == 'POST':
+        nuevo = RegistroTecnico.objects.create(
+            brigada_id=request.POST.get('brigada'),
+            coordenada_id=request.POST.get('coordenada'),
+            tipo_terreno=request.POST.get('tipo_terreno'),
+            inclinacion=request.POST.get('inclinacion'),
+            presencia_agua=bool(request.POST.get('presencia_agua')),
+            estado_suelo=request.POST.get('estado_suelo'),
+        )
+        return redirect('registro_tecnico')
+
+    registros = RegistroTecnico.objects.all().order_by('-fecha')
+    return render(request, 'gestion/registro_tecnico.html', {
+        'brigadas': brigadas,
+        'coordenadas': coordenadas,
+        'registros': registros,
+        'registro_guardado': nuevo
+    })
+
+def registro_botanico(request):
+    brigadas = Brigada.objects.all()
+    coordenadas = Coordenada.objects.all()
+    nuevo = None
+
+    if request.method == 'POST':
+        nuevo = RegistroBotanico.objects.create(
+            brigada_id=request.POST.get('brigada'),
+            coordenada_id=request.POST.get('coordenada'),
+            especie_identificada=request.POST.get('especie_identificada'),
+            familia_botanica=request.POST.get('familia_botanica'),
+            estado_fenologico=request.POST.get('estado_fenologico'),
+            observaciones=request.POST.get('observaciones', '')
+        )
+        return redirect('registro_botanico')
+
+    registros = RegistroBotanico.objects.all().order_by('-fecha')
+    return render(request, 'gestion/registro_botanico.html', {
+        'brigadas': brigadas,
+        'coordenadas': coordenadas,
+        'registros': registros,
+        'registro_guardado': nuevo
+    })
 
 class DepartamentoViewSet(viewsets.ModelViewSet):
     queryset = Departamento.objects.all()
